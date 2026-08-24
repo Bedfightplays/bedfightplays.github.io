@@ -6,14 +6,16 @@
   <title>Eaglercraft Launcher</title>
   <style>
     :root {
-      --bg: #121212;
-      --panel: #1e1e1e;
-      --border: #333;
-      --text: #e0e0e0;
+      --bg: #0f0f0f;
+      --panel: #181818;
+      --border: #2a2a2a;
+      --text: #e4e4e4;
       --muted: #888;
       --accent: #4CAF50;
       --accent-hover: #43a047;
       --danger: #e53935;
+      --selected: #262626;
+      --hover: #1f1f1f;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -22,95 +24,131 @@
       background: var(--bg);
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 1rem;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    .launcher {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 10px;
+    .app {
+      display: flex;
+      height: 100%;
+    }
+
+    /* Main Content */
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       padding: 1.5rem;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      overflow-y: auto;
+      transition: margin-right 0.3s ease;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
     }
 
     h1 {
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-      text-align: center;
+      font-size: 1.6rem;
       color: var(--accent);
       letter-spacing: 0.5px;
     }
 
-    .form-group {
-      margin-bottom: 0.8rem;
+    .info-block {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
     }
 
-    label {
-      display: block;
-      font-size: 0.85rem;
+    .info-title {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .info-text {
+      font-size: 0.9rem;
       color: var(--muted);
-      margin-bottom: 0.3rem;
+      line-height: 1.5;
     }
 
-    select, input, button {
-      width: 100%;
-      padding: 0.65rem 0.8rem;
+    .controls {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .controls input {
+      flex: 1;
+      padding: 0.7rem 0.9rem;
       border: 1px solid var(--border);
       border-radius: 6px;
-      background: #252525;
+      background: #222;
       color: var(--text);
       font-size: 0.95rem;
       outline: none;
-      transition: border-color 0.2s;
     }
 
-    select:focus, input:focus {
+    .controls input:focus {
       border-color: var(--accent);
     }
 
-    button {
-      background: var(--accent);
+    .btn {
+      padding: 0.7rem 1.2rem;
       border: none;
+      border-radius: 6px;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 0.5rem;
+      transition: background 0.2s;
+      font-size: 0.95rem;
     }
 
-    button:hover:not(:disabled) {
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
       background: var(--accent-hover);
     }
 
-    button:disabled {
+    .btn-secondary {
+      background: #333;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #3a3a3a;
+    }
+
+    .btn:disabled {
       background: #444;
+      color: #888;
       cursor: not-allowed;
-      color: #aaa;
     }
 
     #status {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: var(--muted);
       min-height: 1.2rem;
-      margin: 0.8rem 0;
-      text-align: center;
+      margin-bottom: 1rem;
     }
 
     #game-container {
-      width: 100%;
-      height: 320px;
+      flex: 1;
       background: #0a0a0a;
       border: 2px dashed var(--border);
-      border-radius: 6px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #666;
-      font-size: 0.9rem;
+      color: #555;
+      font-size: 0.95rem;
       overflow: hidden;
       position: relative;
     }
@@ -122,110 +160,67 @@
       background: #000;
     }
 
-    .hint {
-      margin-top: 1rem;
-      font-size: 0.75rem;
-      color: #555;
-      text-align: center;
-      line-height: 1.4;
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: var(--panel);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, width 0.3s ease;
+      position: relative;
     }
 
-    code {
-      background: #111;
-      padding: 0.15em 0.3em;
-      border-radius: 3px;
-      font-family: monospace;
+    .sidebar.hidden {
+      transform: translateX(100%);
+      width: 0;
+      border: none;
+      overflow: hidden;
     }
-  </style>
-</head>
-<body>
-  <div class="launcher">
-    <h1>Eaglercraft Launcher</h1>
 
-    <div class="form-group">
-      <label for="version">Version</label>
-      <select id="version">
-        <option value="1.8.8">1.8.8</option>
-        <option value="1.5.2">1.5.2</option>
-      </select>
-    </div>
+    .sidebar-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input type="text" id="username" placeholder="Player" maxlength="16">
-    </div>
+    .sidebar-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
 
-    <button id="play-btn">Play</button>
+    .toggle-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
 
-    <div id="status">Ready</div>
+    .toggle-btn:hover {
+      background: #2a2a2a;
+      color: var(--text);
+    }
 
-    <div id="game-container">
-      <span>Game canvas will appear here</span>
-    </div>
+    .client-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
 
-    <div class="hint">
-      Requires a local Eaglercraft build. Place exports in <code>builds/1.8.8/</code> and <code>builds/1.5.2/</code>.
-    </div>
-  </div>
+    .client-item {
+      padding: 0.8rem;
+      margin-bottom: 0.5rem;
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
 
-  <script>
-    const playBtn = document.getElementById('play-btn');
-    const versionSelect = document.getElementById('version');
-    const usernameInput = document.getElementById('username');
-    const statusEl = document.getElementById('status');
-    const gameContainer = document.getElementById('game-container');
-
-    let isRunning = false;
-
-    playBtn.addEventListener('click', async () => {
-      if (isRunning) return;
-      isRunning = true;
-      playBtn.disabled = true;
-      playBtn.textContent = 'Loading...';
-
-      const version = versionSelect.value;
-      const username = usernameInput.value.trim() || 'Player';
-
-      statusEl.textContent = `Initializing ${version}...`;
-
-      // Simulate asset/game initialization delay
-      await new Promise(resolve => setTimeout(resolve, 1200));
-
-      // Eaglercraft is typically served as a static web build.
-      // Adjust the path below to match your local folder structure.
-      const gamePath = `builds/${version}/index.html?username=${encodeURIComponent(username)}`;
-
-      // Check if the build exists (basic fetch probe)
-      try {
-        const res = await fetch(gamePath, { method: 'HEAD' });
-        if (!res.ok) throw new Error('Build not found');
-      } catch {
-        statusEl.textContent = `Error: Could not load ${version} build.`;
-        statusEl.style.color = 'var(--danger)';
-        playBtn.textContent = 'Play';
-        playBtn.disabled = false;
-        isRunning = false;
-        return;
-      }
-
-      // Load the game in an iframe
-      gameContainer.innerHTML = '';
-      const iframe = document.createElement('iframe');
-      iframe.src = gamePath;
-      iframe.allow = 'autoplay; fullscreen';
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.border = 'none';
-      gameContainer.appendChild(iframe);
-
-      statusEl.textContent = `Running ${version} as ${username}`;
-      statusEl.style.color = 'var(--accent)';
-      playBtn.textContent = 'Restart';
-      playBtn.disabled = false;
-
-      iframe.addEventListener('load', () => {
-        statusEl.textContent = `${version} loaded successfully.`;
-      });
-    });
-
-    // Allow Enter key
+    .client-item:hover {
+      background: var(--hover);
