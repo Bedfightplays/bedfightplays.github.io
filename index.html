@@ -24,13 +24,11 @@
             --sidebar-width: 320px;
             --radius: 14px;
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Outfit', system-ui, sans-serif;
             background: var(--bg-deep);
@@ -39,20 +37,16 @@
             overflow: hidden;
             display: flex;
         }
-
-        /* Background effects */
         body::before {
             content: '';
             position: fixed;
             inset: 0;
-            background: 
+            background:
                 radial-gradient(ellipse 80% 50% at 20% 40%, rgba(59, 130, 246, 0.08), transparent),
                 radial-gradient(ellipse 60% 40% at 80% 60%, rgba(34, 197, 94, 0.05), transparent);
             pointer-events: none;
             z-index: 0;
         }
-
-        /* ========== MAIN CONTENT ========== */
         .main {
             flex: 1;
             display: flex;
@@ -62,12 +56,9 @@
             transition: margin-right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             min-width: 0;
         }
-
         .main.sidebar-hidden {
             margin-right: 0;
         }
-
-        /* Top bar */
         .topbar {
             display: flex;
             align-items: center;
@@ -77,13 +68,11 @@
             background: rgba(15, 20, 25, 0.85);
             backdrop-filter: blur(12px);
         }
-
         .logo {
             display: flex;
             align-items: center;
             gap: 14px;
         }
-
         .logo-icon {
             width: 42px;
             height: 42px;
@@ -95,23 +84,19 @@
             font-size: 20px;
             box-shadow: 0 4px 16px var(--accent-glow);
         }
-
         .logo-text {
             font-weight: 700;
             font-size: 1.35rem;
             letter-spacing: -0.02em;
         }
-
         .logo-text span {
             color: var(--accent);
         }
-
         .topbar-actions {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-
         .btn-icon {
             width: 40px;
             height: 40px;
@@ -126,14 +111,16 @@
             transition: all 0.2s;
             font-size: 18px;
         }
-
         .btn-icon:hover {
             background: var(--border);
             color: var(--text);
             border-color: #2a3a4d;
         }
-
-        /* Content area */
+        .btn-icon.active {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
         .content {
             flex: 1;
             display: flex;
@@ -142,13 +129,11 @@
             overflow-y: auto;
             gap: 28px;
         }
-
         .hero {
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
-
         .hero-badge {
             display: inline-flex;
             align-items: center;
@@ -162,33 +147,27 @@
             width: fit-content;
             letter-spacing: 0.03em;
         }
-
         .hero h1 {
             font-size: 2.6rem;
             font-weight: 800;
             letter-spacing: -0.03em;
             line-height: 1.15;
         }
-
         .hero h1 .version {
             color: var(--accent);
         }
-
         .hero p {
             color: var(--text-muted);
             font-size: 1.1rem;
             max-width: 560px;
             line-height: 1.55;
         }
-
-        /* Info cards */
         .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 14px;
             max-width: 720px;
         }
-
         .info-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -198,7 +177,6 @@
             flex-direction: column;
             gap: 4px;
         }
-
         .info-card .label {
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -206,13 +184,10 @@
             color: var(--text-muted);
             font-weight: 500;
         }
-
         .info-card .value {
             font-size: 1.15rem;
             font-weight: 600;
         }
-
-        /* Description */
         .desc-box {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -223,12 +198,9 @@
             color: var(--text-muted);
             font-size: 0.98rem;
         }
-
         .desc-box strong {
             color: var(--text);
         }
-
-        /* Play section */
         .play-section {
             margin-top: auto;
             display: flex;
@@ -236,7 +208,6 @@
             gap: 16px;
             padding-top: 12px;
         }
-
         .play-btn {
             display: inline-flex;
             align-items: center;
@@ -257,38 +228,23 @@
             min-width: 240px;
             letter-spacing: 0.02em;
         }
-
         .play-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 32px rgba(34, 197, 94, 0.4);
             background: linear-gradient(135deg, var(--green-hover), #166534);
         }
-
         .play-btn:active {
             transform: translateY(0);
         }
-
         .play-btn svg {
             width: 22px;
             height: 22px;
             fill: currentColor;
         }
-
         .play-hint {
             font-size: 0.85rem;
             color: var(--text-muted);
         }
-
-        .play-hint a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .play-hint a:hover {
-            text-decoration: underline;
-        }
-
-        /* ========== SIDEBAR ========== */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--bg-sidebar);
@@ -300,14 +256,12 @@
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
         }
-
         .sidebar.hidden {
             transform: translateX(100%);
             width: 0;
             border: none;
             overflow: hidden;
         }
-
         .sidebar-header {
             padding: 18px 20px;
             border-bottom: 1px solid var(--border);
@@ -315,13 +269,11 @@
             align-items: center;
             justify-content: space-between;
         }
-
         .sidebar-header h2 {
             font-size: 0.95rem;
             font-weight: 600;
             letter-spacing: 0.02em;
         }
-
         .hide-btn {
             display: flex;
             align-items: center;
@@ -337,12 +289,10 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-
         .hide-btn:hover {
             background: var(--bg-card);
             color: var(--text);
         }
-
         .client-list {
             flex: 1;
             overflow-y: auto;
@@ -351,20 +301,16 @@
             flex-direction: column;
             gap: 6px;
         }
-
         .client-list::-webkit-scrollbar {
             width: 6px;
         }
-
         .client-list::-webkit-scrollbar-track {
             background: transparent;
         }
-
         .client-list::-webkit-scrollbar-thumb {
             background: #2a3a4d;
             border-radius: 3px;
         }
-
         .client-item {
             display: flex;
             align-items: center;
@@ -380,16 +326,13 @@
             font-family: inherit;
             width: 100%;
         }
-
         .client-item:hover {
             background: rgba(255, 255, 255, 0.04);
         }
-
         .client-item.active {
             background: rgba(59, 130, 246, 0.12);
             border-color: rgba(59, 130, 246, 0.35);
         }
-
         .client-icon {
             width: 38px;
             height: 38px;
@@ -402,17 +345,14 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
         }
-
         .client-item.active .client-icon {
             background: rgba(59, 130, 246, 0.2);
             border-color: rgba(59, 130, 246, 0.4);
         }
-
         .client-info {
             flex: 1;
             min-width: 0;
         }
-
         .client-name {
             font-weight: 600;
             font-size: 0.92rem;
@@ -420,13 +360,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
         .client-meta {
             font-size: 0.75rem;
             color: var(--text-muted);
             margin-top: 2px;
         }
-
         .client-tag {
             font-size: 0.65rem;
             font-weight: 600;
@@ -436,28 +374,18 @@
             letter-spacing: 0.04em;
             flex-shrink: 0;
         }
-
         .tag-rec {
             background: rgba(34, 197, 94, 0.15);
             color: #4ade80;
         }
-
         .tag-new {
             background: rgba(59, 130, 246, 0.15);
             color: #60a5fa;
         }
-
         .tag-custom {
             background: rgba(168, 85, 247, 0.15);
             color: #c084fc;
         }
-
-        .tag-legacy {
-            background: rgba(148, 163, 184, 0.15);
-            color: #94a3b8;
-        }
-
-        /* Floating show sidebar button */
         .show-sidebar-btn {
             position: fixed;
             top: 18px;
@@ -478,16 +406,12 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             transition: all 0.2s;
         }
-
         .show-sidebar-btn:hover {
             background: var(--border);
         }
-
         .show-sidebar-btn.visible {
             display: flex;
         }
-
-        /* Responsive */
         @media (max-width: 900px) {
             .sidebar {
                 position: fixed;
@@ -497,16 +421,13 @@
                 z-index: 50;
                 box-shadow: -8px 0 30px rgba(0,0,0,0.5);
             }
-
             .sidebar.hidden {
                 transform: translateX(100%);
                 width: var(--sidebar-width);
             }
-
             .content {
                 padding: 24px 20px;
             }
-
             .hero h1 {
                 font-size: 1.9rem;
             }
@@ -514,11 +435,15 @@
     </style>
 </head>
 <body>
+    <!-- Background music -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://github.com/Bedfightplays/music/raw/refs/heads/main/MONTAGEM%20PERIGOSA.mp3" type="audio/mpeg">
+    </audio>
+
     <button class="show-sidebar-btn" id="showSidebarBtn" onclick="toggleSidebar()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
         Clients
     </button>
-
     <div class="main" id="main">
         <div class="topbar">
             <div class="logo">
@@ -526,17 +451,16 @@
                 <div class="logo-text">Bedfight<span>plays</span> Launcher</div>
             </div>
             <div class="topbar-actions">
+                <button class="btn-icon" id="musicBtn" title="Toggle Music" onclick="toggleMusic()">🔊</button>
                 <button class="btn-icon" title="About" onclick="alert('Bedfightplays Launcher\nA clean Eaglercraft client selector.\nMade for the community.')">ℹ️</button>
             </div>
         </div>
-
         <div class="content">
             <div class="hero">
                 <div class="hero-badge" id="badge">● Recommended</div>
                 <h1 id="clientTitle">Eaglercraft <span class="version">1.8.8</span></h1>
                 <p id="clientSubtitle">The definitive Eaglercraft experience. Most stable and widely used version with excellent PvP and server support.</p>
             </div>
-
             <div class="info-grid" id="infoGrid">
                 <div class="info-card">
                     <span class="label">Base Version</span>
@@ -555,11 +479,9 @@
                     <span class="value" id="infoStatus">Stable</span>
                 </div>
             </div>
-
             <div class="desc-box" id="descBox">
                 <strong>EaglercraftX 1.8.8</strong> by lax1dude is the gold standard for browser Minecraft. It features full 1.8 combat, singleplayer with world import/export, multiplayer via WebSocket, resource packs, and the largest active server community. Perfect for Bedwars, Skywars, Practice, and Survival servers.
             </div>
-
             <div class="play-section">
                 <button class="play-btn" id="playBtn" onclick="launchClient()">
                     <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -569,7 +491,6 @@
             </div>
         </div>
     </div>
-
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2>Clients</h2>
@@ -578,11 +499,8 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
             </button>
         </div>
-        <div class="client-list" id="clientList">
-            <!-- Filled by JS -->
-        </div>
+        <div class="client-list" id="clientList"></div>
     </aside>
-
     <script>
         const clients = [
             {
@@ -622,7 +540,7 @@
                 url: "https://eaglercraft.com/mc/1.12.2/"
             },
             {
-            id: "1.21.11",
+                id: "1.21.11",
                 name: "Minecraft 1.21.11",
                 short: "Vanilla 1.21.11",
                 icon: "🏞",
@@ -633,14 +551,14 @@
                 best: "New Vanilla",
                 status: "Stable",
                 badge: "● For New Version Users",
-                title: "Vanilla1.21.11",
+                title: "Vanilla",
                 version: "1.21.11",
                 subtitle: "Vanilla with the new updates.",
-                desc: "<strong>Eaglercraft 1.12.2</strong> by PeytonPlayz585 brings the World of Color Update to the browser. Includes concrete blocks, terracotta, new biomes, advancements, and more. WASM-GC builds offer the best performance. Still under active development.",
+                desc: "<strong>Minecraft 1.21.11</strong> — the newest vanilla experience running in the browser via WASM.",
                 url: "https://mc1-21-11.netlify.app"
             },
             {
-            id: "modern 1.12.2",
+                id: "modern-1.12.2",
                 name: "Modern Client 1.12.2",
                 short: "Modern 1.12",
                 icon: "📱",
@@ -654,7 +572,7 @@
                 title: "ModernClient",
                 version: "1.12.2",
                 subtitle: "PVP mods - Best for Crystal.",
-                desc: "<strong>Modern 1.12 Eaglercraft</strong>",
+                desc: "<strong>Modern 1.12 Eaglercraft</strong> — optimized for crystal PvP and modern combat.",
                 url: "https://bedfightplays.github.io/modernclient"
             },
             {
@@ -747,13 +665,45 @@
                 desc: "<strong>Resent Client</strong> is aimed at competitive players. Clean UI and features tailored for practice, duels, and minigames on 1.8.8 servers.",
                 url: "https://eaglercraft.dev/"
             }
-            
-            
-            
         ];
 
         let currentId = "1.8.8";
         let sidebarVisible = true;
+        let musicPlaying = false;
+
+        const bgMusic = document.getElementById("bgMusic");
+        const musicBtn = document.getElementById("musicBtn");
+
+        function startMusic() {
+            if (!musicPlaying) {
+                bgMusic.volume = 0.4;
+                bgMusic.play().then(() => {
+                    musicPlaying = true;
+                    musicBtn.textContent = "🔊";
+                    musicBtn.classList.add("active");
+                }).catch(() => {});
+            }
+        }
+
+        function toggleMusic() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicPlaying = false;
+                musicBtn.textContent = "🔇";
+                musicBtn.classList.remove("active");
+            } else {
+                bgMusic.volume = 0.4;
+                bgMusic.play().then(() => {
+                    musicPlaying = true;
+                    musicBtn.textContent = "🔊";
+                    musicBtn.classList.add("active");
+                }).catch(err => console.log("Music play failed:", err));
+            }
+        }
+
+        // Browsers block autoplay — start on first click/key
+        document.addEventListener("click", startMusic, { once: true });
+        document.addEventListener("keydown", startMusic, { once: true });
 
         function renderClients() {
             const list = document.getElementById("clientList");
@@ -773,7 +723,6 @@
             currentId = id;
             const c = clients.find(x => x.id === id);
             if (!c) return;
-
             document.getElementById("badge").textContent = c.badge;
             document.getElementById("clientTitle").innerHTML = `${c.title} <span class="version">${c.version}</span>`;
             document.getElementById("clientSubtitle").textContent = c.subtitle;
@@ -782,7 +731,6 @@
             document.getElementById("infoBest").textContent = c.best;
             document.getElementById("infoStatus").textContent = c.status;
             document.getElementById("descBox").innerHTML = c.desc;
-
             renderClients();
         }
 
@@ -791,7 +739,7 @@
             if (c && c.url) {
                 window.open(c.url, "_blank");
             } else {
-                alert("No launch URL configured for this client yet.\nYou can download offline clients from eaglercraft.dev");
+                alert("No launch URL configured for this client yet.");
             }
         }
 
@@ -800,7 +748,6 @@
             const sidebar = document.getElementById("sidebar");
             const main = document.getElementById("main");
             const showBtn = document.getElementById("showSidebarBtn");
-
             if (sidebarVisible) {
                 sidebar.classList.remove("hidden");
                 main.classList.remove("sidebar-hidden");
@@ -812,7 +759,6 @@
             }
         }
 
-        // Init
         renderClients();
         selectClient("1.8.8");
     </script>
