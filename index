@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eaglercraft Launcher</title>
+  <style>
+    :root {
+      --bg: #121212;
+      --panel: #1e1e1e;
+      --border: #333;
+      --text: #e0e0e0;
+      --muted: #888;
+      --accent: #4CAF50;
+      --accent-hover: #43a047;
+      --danger: #e53935;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .launcher {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+
+    .form-group {
+      margin-bottom: 0.8rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    select, input, button {
+      width: 100%;
+      padding: 0.65rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #252525;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--accent);
+    }
+
+    button {
+      background: var(--accent);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    button:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+
+    button:disabled {
+      background: #444;
+      cursor: not-allowed;
+      color: #aaa;
+    }
+
+    #status {
+      font-size: 0.8rem;
+      color: var(--muted);
+      min-height: 1.2rem;
+      margin: 0.8rem 0;
+      text-align: center;
+    }
+
+    #game-container {
+      width: 100%;
+      height: 320px;
+      background: #0a0a0a;
+      border: 2px dashed var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-size: 0.9rem;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #game-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
+    }
+
+    .hint {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: #555;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    code {
+      background: #111;
+      padding: 0.15em 0.3em;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="launcher">
+    <h1>Eaglercraft Launcher</h1>
+
+    <div class="form-group">
+      <label for="version">Version</label>
+      <select id="version">
+        <option value="1.8.8">1.8.8</option>
+        <option value="1.5.2">1.5.2</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Player" maxlength="16">
+    </div>
+
+    <button id="play-btn">Play</button>
+
+    <div id="status">Ready</div>
+
+    <div id="game-container">
+      <span>Game canvas will appear here</span>
+    </div>
+
+    <div class="hint">
+      Requires a local Eaglercraft build. Place exports in <code>builds/1.8.8/</code> and <code>builds/1.5.2/</code>.
+    </div>
+  </div>
+
+  <script>
+    const playBtn = document.getElementById('play-btn');
+    const versionSelect = document.getElementById('version');
+    const usernameInput = document.getElementById('username');
+    const statusEl = document.getElementById('status');
+    const gameContainer = document.getElementById('game-container');
+
+    let isRunning = false;
+
+    playBtn.addEventListener('click', async () => {
+      if (isRunning) return;
+      isRunning = true;
+      playBtn.disabled = true;
+      playBtn.textContent = 'Loading...';
+
+      const version = versionSelect.value;
+      const username = usernameInput.value.trim() || 'Player';
+
+      statusEl.textContent = `Initializing ${version}...`;
+
+      // Simulate asset/game initialization delay
+      await new Promise(resolve => setTimeout(resolve, 1200));
+
+      // Eaglercraft is typically served as a static web build.
+      // Adjust the path below to match your local folder structure.
+      const gamePath = `builds/${version}/index.html?username=${encodeURIComponent(username)}`;
+
+      // Check if the build exists (basic fetch probe)
+      try {
+        const res = await fetch(gamePath, { method: 'HEAD' });
+        if (!res.ok) throw new Error('Build not found');
+      } catch {
+        statusEl.textContent = `Error: Could not load ${version} build.`;
+        statusEl.style.color = 'var(--danger)';
+        playBtn.textContent = 'Play';
+        playBtn.disabled = false;
+        isRunning = false;
+        return;
+      }
+
+      // Load the game in an iframe
+      gameContainer.innerHTML = '';
+      const iframe = document.createElement('iframe');
+      iframe.src = gamePath;
+      iframe.allow = 'autoplay; fullscreen';
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.border = 'none';
+      gameContainer.appendChild(iframe);
+
+      statusEl.textContent = `Running ${version} as ${username}`;
+      statusEl.style.color = 'var(--accent)';
+      playBtn.textContent = 'Restart';
+      playBtn.disabled = false;
+
+      iframe.addEventListener('load', () => {
+        statusEl.textContent = `${version} loaded successfully.`;
+      });
+    });
+
+    // Allow Enter key
