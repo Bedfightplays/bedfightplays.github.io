@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bedfightplays Launcher</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0e14;
+            --bg-main: #0f1419;
+            --bg-card: #151b24;
+            --bg-sidebar: #0c1017;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-glow: rgba(59, 130, 246, 0.35);
+            --green: #22c55e;
+            --green-hover: #16a34a;
+            --text: #e8eef7;
+            --text-muted: #8b9cb3;
+            --border: #1e2a3a;
+            --sidebar-width: 320px;
+            --radius: 14px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', system-ui, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Background effects */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(59, 130, 246, 0.08), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(34, 197, 94, 0.05), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+            transition: margin-right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 0;
+        }
+
+        .main.sidebar-hidden {
+            margin-right: 0;
+        }
+
+        /* Top bar */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 28px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(15, 20, 25, 0.85);
+            backdrop-filter: blur(12px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #3b82f6, #22c55e);
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.35rem;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: var(--accent);
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 18px;
+        }
+
+        .btn-icon:hover {
+            background: var(--border);
+            color: var(--text);
+            border-color: #2a3a4d;
+        }
+
+        /* Content area */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 32px 40px;
+            overflow-y: auto;
+            gap: 28px;
+        }
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            width: fit-content;
+            letter-spacing: 0.03em;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+        }
+
+        .hero h1 .version {
+            color: var(--accent);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 560px;
+            line-height: 1.55;
+        }
+
+        /* Info cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            max-width: 720px;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .info-card .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .info-card .value {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        /* Description */
+        .desc-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 26px;
+            max-width: 720px;
+            line-height: 1.65;
+            color: var(--text-muted);
+            font-size: 0.98rem;
+        }
+
+        .desc-box strong {
+            color: var(--text);
+        }
+
+        /* Play section */
+        .play-section {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding-top: 12px;
+        }
+
+        .play-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--green), #15803d);
+            color: white;
+            font-family: inherit;
+            font-size: 1.25rem;
+            font-weight: 700;
+            padding: 18px 48px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 6px 24px rgba(34, 197, 94, 0.3);
+            width: fit-content;
+            min-width: 240px;
+            letter-spacing: 0.02em;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(34, 197, 94, 0.4);
+            background: linear-gradient(135deg, var(--green-hover), #166534);
+        }
+
+        .play-btn:active {
+            transform: translateY(0);
+        }
+
+        .play-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .play-hint {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .play-hint a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .play-hint a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+        }
+
+        .sidebar.hidden {
+            transform: translateX(100%);
+            width: 0;
+            border: none;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-header h2 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .hide-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .hide-btn:hover {
+            background: var(--bg-card);
+            color: var(--text);
+        }
+
+        .client-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .client-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .client-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .client-list::-webkit-scrollbar-thumb {
+            background: #2a3a4d;
+            border-radius: 3px;
+        }
+
+        .client-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 11px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.18s;
+            text-align: left;
+            background: transparent;
+            color: inherit;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .client-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .client-item.active {
+            background: rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.35);
+        }
+
+        .client-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+
+        .client-item.active .client-icon {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .client-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .client-name {
+            font-weight: 600;
+            font-size: 0.92rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .client-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .client-tag {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 3px 7px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            flex-shrink: 0;
+        }
+
+        .tag-rec {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+
+        .tag-new {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+        }
+
+        .tag-custom {
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+        }
+
+        .tag-legacy {
+            background: rgba(148, 163, 184, 0.15);
+            color: #94a3b8;
+        }
+
+        /* Floating show sidebar button */
+        .show-sidebar-btn {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 10;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            transition: all 0.2s;
+        }
+
+        .show-sidebar-btn:hover {
+            background: var(--border);
+        }
+
+        .show-sidebar-btn.visible {
+            display: flex;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar {
+                position: fixed;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                z-index: 50;
+                box-shadow: -8px 0 30px rgba(0,0,0,0.5);
+            }
+
+            .sidebar.hidden {
+                transform: translateX(100%);
+                width: var(--sidebar-width);
+            }
+
+            .content {
+                padding: 24px 20px;
+            }
+
+            .hero h1 {
+                font-size: 1.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="show-sidebar-btn" id="showSidebarBtn" onclick="toggleSidebar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        Clients
+    </button>
+
+    <div class="main" id="main">
+        <div class="topbar">
+            <div class="logo">
+                <div class="logo-icon">⚔️</div>
+                <div class="logo-text">Bedfight<span>plays</span> Launcher</div>
+            </div>
+            <div class="topbar-actions">
+                <button class="btn-icon" title="About" onclick="alert('Bedfightplays Launcher\nA clean Eaglercraft client selector.\nMade for the community.')">ℹ️</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="hero">
+                <div class="hero-badge" id="badge">● Recommended</div>
+                <h1 id="clientTitle">Eaglercraft <span class="version">1.8.8</span></h1>
+                <p id="clientSubtitle">The definitive Eaglercraft experience. Most stable and widely used version with excellent PvP and server support.</p>
+            </div>
+
+            <div class="info-grid" id="infoGrid">
+                <div class="info-card">
+                    <span class="label">Base Version</span>
+                    <span class="value" id="infoBase">Minecraft 1.8.8</span>
+                </div>
+                <div class="info-card">
+                    <span class="label">Runtime</span>
+                    <span class="value" id="infoRuntime">JavaScript</span>
+                </div>
+                <div class="info-card">
+                    <span class="label">Best For</span>
+                    <span class="value" id="infoBest">PvP & Servers</span>
+                </div>
+                <div class="info-card">
+                    <span class="label">Status</span>
+                    <span class="value" id="infoStatus">Stable</span>
+                </div>
+            </div>
+
+            <div class="desc-box" id="descBox">
+                <strong>EaglercraftX 1.8.8</strong> by lax1dude is the gold standard for browser Minecraft. It features full 1.8 combat, singleplayer with world import/export, multiplayer via WebSocket, resource packs, and the largest active server community. Perfect for Bedwars, Skywars, Practice, and Survival servers.
+            </div>
+
+            <div class="play-section">
+                <button class="play-btn" id="playBtn" onclick="launchClient()">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    Play Now
+                </button>
+                <p class="play-hint" id="playHint">Opens in a new tab • Works best in Chrome / Edge</p>
+            </div>
+        </div>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Clients</h2>
+            <button class="hide-btn" onclick="toggleSidebar()">
+                Hide
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+        </div>
+        <div class="client-list" id="clientList">
+            <!-- Filled by JS -->
+        </div>
+    </aside>
+
+    <script>
+        const clients = [
+            {
+                id: "1.8.8",
+                name: "Eaglercraft 1.8.8",
+                short: "1.8.8",
+                icon: "⚔️",
+                tag: "rec",
+                tagLabel: "Rec",
+                base: "Minecraft 1.8.8",
+                runtime: "JS / WASM",
+                best: "PvP & Servers",
+                status: "Stable",
+                badge: "● Recommended",
+                title: "Eaglercraft",
+                version: "1.8.8",
+                subtitle: "The definitive Eaglercraft experience. Most stable and widely used version with excellent PvP and server support.",
+                desc: "<strong>EaglercraftX 1.8.8</strong> by lax1dude is the gold standard for browser Minecraft. It features full 1.8 combat, singleplayer with world import/export, multiplayer via WebSocket, resource packs, and the largest active server community. Perfect for Bedwars, Skywars, Practice, and Survival servers.",
+                url: "https://eaglercraft.com/mc/1.8.8/"
+            },
+            {
+                id: "1.12.2",
+                name: "Eaglercraft 1.12.2",
+                short: "1.12.2",
+                icon: "🌈",
+                tag: "new",
+                tagLabel: "New",
+                base: "Minecraft 1.12.2",
+                runtime: "JS / WASM",
+                best: "Modern Features",
+                status: "In-Dev",
+                badge: "● Actively Developing",
+                title: "Eaglercraft",
+                version: "1.12.2",
+                subtitle: "Modern port with World of Color update content, concrete, terracotta, and newer mechanics.",
+                desc: "<strong>Eaglercraft 1.12.2</strong> by PeytonPlayz585 brings the World of Color Update to the browser. Includes concrete blocks, terracotta, new biomes, advancements, and more. WASM-GC builds offer the best performance. Still under active development.",
+                url: "https://eaglercraft.com/mc/1.12.2/"
+            },
+            {
+                id: "pixel-1.8",
+                name: "PixelClient 1.8.8",
+                short: "Pixel 1.8",
+                icon: "✨",
+                tag: "custom",
+                tagLabel: "Custom",
+                base: "Minecraft 1.8.8",
+                runtime: "JS / WASM",
+                best: "Low-end Devices",
+                status: "Stable",
+                badge: "● Community Favorite",
+                title: "PixelClient",
+                version: "1.8.8",
+                subtitle: "Optimized custom client based on 1.8.8. Great performance on Chromebooks and weaker devices.",
+                desc: "<strong>PixelClient 1.8.8</strong> is a popular community client focused on performance and polish. Ideal for players on school Chromebooks or lower-end hardware while keeping full 1.8 PvP support.",
+                url: "https://eaglercraft.dev/"
+            },
+            {
+                id: "pixel-1.12",
+                name: "PixelClient 1.12.2",
+                short: "Pixel 1.12",
+                icon: "✨",
+                tag: "custom",
+                tagLabel: "Custom",
+                base: "Minecraft 1.12.2",
+                runtime: "JS / WASM",
+                best: "Modern + Perf",
+                status: "Stable",
+                badge: "● Recommended",
+                title: "PixelClient",
+                version: "1.12.2",
+                subtitle: "High-performance 1.12.2 custom client with modern blocks and solid optimization.",
+                desc: "<strong>PixelClient 1.12.2</strong> combines the features of 1.12.2 with community optimizations. A strong choice if you want newer content without sacrificing too much performance.",
+                url: "https://eaglercraft.dev/"
+            },
+            {
+                id: "astra",
+                name: "Astra Client",
+                short: "Astra",
+                icon: "🚀",
+                tag: "custom",
+                tagLabel: "Custom",
+                base: "1.8.8 / 1.12.2",
+                runtime: "JS / WASM",
+                best: "Features",
+                status: "Active",
+                badge: "● Feature Rich",
+                title: "Astra Client",
+                version: "1.6+",
+                subtitle: "Feature-packed client with unique tools and a strong focus on quality of life.",
+                desc: "<strong>Astra Client</strong> is known for pushing boundaries with unique features in the Eaglercraft space. Great if you want more than the vanilla experience while staying in the browser.",
+                url: "https://astraclient.com/"
+            },
+            {
+                id: "tuff",
+                name: "Tuff Client",
+                short: "Tuff",
+                icon: "💎",
+                tag: "custom",
+                tagLabel: "Custom",
+                base: "Minecraft 1.12.2",
+                runtime: "JS / WASM",
+                best: "1.12.2 PvP",
+                status: "Stable",
+                badge: "● Partner Client",
+                title: "Tuff Client",
+                version: "1.12.2",
+                subtitle: "Solid 1.12.2 custom client with good performance and active support.",
+                desc: "<strong>Tuff Client</strong> is a well-regarded 1.12.2 client. Offers a clean experience with solid optimization for both casual and competitive play.",
+                url: "https://eaglercraft.dev/"
+            },
+            {
+                id: "resent",
+                name: "Resent Client",
+                short: "Resent",
+                icon: "🔥",
+                tag: "custom",
+                tagLabel: "Custom",
+                base: "Minecraft 1.8.8",
+                runtime: "JS / WASM",
+                best: "Competitive",
+                status: "Active",
+                badge: "● Competitive",
+                title: "Resent Client",
+                version: "4.0 / 5.0",
+                subtitle: "Competitive-focused client popular among PvP players.",
+                desc: "<strong>Resent Client</strong> is aimed at competitive players. Clean UI and features tailored for practice, duels, and minigames on 1.8.8 servers.",
+                url: "https://eaglercraft.dev/"
+            },
+            {
+                id: "1.5.2",
+                name: "Eaglercraft 1.5.2",
+                short: "1.5.2",
+                icon: "📜",
+                tag: "legacy",
+                tagLabel: "Legacy",
+                base: "Minecraft 1.5.2",
+                runtime: "JavaScript",
+                best: "Nostalgia",
+                status: "Classic",
+                badge: "● Classic",
+                title: "Eaglercraft",
+                version: "1.5.2",
+                subtitle: "The original Eaglercraft. Lightweight and still widely playable for classic servers.",
+                desc: "<strong>Eaglercraft 1.5.2</strong> is the classic original by lax1dude. Lighter than newer versions and still supported by many older servers. Great for pure nostalgia.",
+                url: "https://eaglercraft.com/mc/1.5.2/"
+            },
+            {
+                id: "1.2.5",
+                name: "Release 1.2.5",
+                short: "1.2.5",
+                icon: "🕰️",
+                tag: "legacy",
+                tagLabel: "Legacy",
+                base: "Minecraft 1.2.5",
+                runtime: "JavaScript",
+                best: "Very Old",
+                status: "Historic",
+                badge: "● Historic",
+                title: "Eaglercraft",
+                version: "1.2.5",
+                subtitle: "Very early release version for the ultimate retro experience.",
+                desc: "<strong>Release 1.2.5</strong> takes you back to a much earlier era of Minecraft. Small file size and pure classic gameplay.",
+                url: "https://eaglercraft.dev/"
+            },
+            {
+                id: "beta",
+                name: "Beta 1.7.3",
+                short: "Beta 1.7",
+                icon: "🌿",
+                tag: "legacy",
+                tagLabel: "Legacy",
+                base: "Minecraft Beta 1.7.3",
+                runtime: "JavaScript",
+                best: "Beta Nostalgia",
+                status: "Historic",
+                badge: "● Beta Era",
+                title: "Eaglercraft",
+                version: "Beta 1.7.3",
+                subtitle: "Experience Minecraft Beta in your browser.",
+                desc: "<strong>Beta 1.7.3</strong> brings the classic Beta era to the browser. Perfect for players who miss the old terrain generation and feel.",
+                url: "https://eaglercraft.dev/"
+            }
+        ];
+
+        let currentId = "1.8.8";
+        let sidebarVisible = true;
+
+        function renderClients() {
+            const list = document.getElementById("clientList");
+            list.innerHTML = clients.map(c => `
+                <button class="client-item ${c.id === currentId ? 'active' : ''}" onclick="selectClient('${c.id}')">
+                    <div class="client-icon">${c.icon}</div>
+                    <div class="client-info">
+                        <div class="client-name">${c.name}</div>
+                        <div class="client-meta">${c.base}</div>
+                    </div>
+                    <span class="client-tag tag-${c.tag}">${c.tagLabel}</span>
+                </button>
+            `).join("");
+        }
+
+        function selectClient(id) {
+            currentId = id;
+            const c = clients.find(x => x.id === id);
+            if (!c) return;
+
+            document.getElementById("badge").textContent = c.badge;
+            document.getElementById("clientTitle").innerHTML = `${c.title} <span class="version">${c.version}</span>`;
+            document.getElementById("clientSubtitle").textContent = c.subtitle;
+            document.getElementById("infoBase").textContent = c.base;
+            document.getElementById("infoRuntime").textContent = c.runtime;
+            document.getElementById("infoBest").textContent = c.best;
+            document.getElementById("infoStatus").textContent = c.status;
+            document.getElementById("descBox").innerHTML = c.desc;
+
+            renderClients();
+        }
+
+        function launchClient() {
+            const c = clients.find(x => x.id === currentId);
+            if (c && c.url) {
+                window.open(c.url, "_blank");
+            } else {
+                alert("No launch URL configured for this client yet.\nYou can download offline clients from eaglercraft.dev");
+            }
+        }
+
+        function toggleSidebar() {
+            sidebarVisible = !sidebarVisible;
+            const sidebar = document.getElementById("sidebar");
+            const main = document.getElementById("main");
+            const showBtn = document.getElementById("showSidebarBtn");
+
+            if (sidebarVisible) {
+                sidebar.classList.remove("hidden");
+                main.classList.remove("sidebar-hidden");
+                showBtn.classList.remove("visible");
+            } else {
+                sidebar.classList.add("hidden");
+                main.classList.add("sidebar-hidden");
+                showBtn.classList.add("visible");
+            }
+        }
+
+        // Init
+        renderClients();
+        selectClient("1.8.8");
+    </script>
+</body>
+</html>
